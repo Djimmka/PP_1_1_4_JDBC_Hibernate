@@ -17,15 +17,29 @@ public class DBConnectionTest {
             if (!connection.isClosed()) {
                 System.out.println("Connected");
             }
-            try (Statement statement = connection.createStatement()){
-                statement.execute("drop table t1;");
-            }
-            connection.close();
-            if (connection.isClosed()) {
-                System.out.println("Disconnected");
-            }
+//            try (Statement statement = connection.createStatement()){
+//                statement.execute("CREATE TABLE `pp_1_1_3-4_jdbc_hibernate-master`.`users` (\n" +
+//                        "  `id` INT NOT NULL AUTO_INCREMENT,\n" +
+//                        "  `name` VARCHAR(45) NULL,\n" +
+//                        "  `surname` VARCHAR(45) NULL,\n" +
+//                        "  `age` INT NULL,\n" +
+//                        "  PRIMARY KEY (`id`));");
+//            }
+//            connection.close();
+//            if (connection.isClosed()) {
+//                System.out.println("Disconnected");
+//            }
+
+            UserServiceTest usTest = new UserServiceTest();
+            usTest.createUsersTable();
+            usTest.saveUser();
+            usTest.getAllUsers();
+            usTest.removeUserById();
+            usTest.cleanUsersTable();
+            usTest.dropUsersTable();
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            //throw new RuntimeException(e);
         }
     }
 }

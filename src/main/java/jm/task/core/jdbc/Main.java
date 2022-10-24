@@ -2,10 +2,7 @@ package jm.task.core.jdbc;
 
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.service.UserServiceImpl;
-import jm.task.core.jdbc.util.Util;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.*;
 
 public class Main {
@@ -18,7 +15,7 @@ public class Main {
         UserServiceImpl dataTransfer = new UserServiceImpl();
         dataTransfer.createUsersTable();
         fourUsers.forEach(a -> dataTransfer.saveUser(a.getName(), a.getLastName(), a.getAge()));
-        dataTransfer.getAllUsers();
+        dataTransfer.getAllUsers().forEach(System.out::println);
         dataTransfer.cleanUsersTable();
         dataTransfer.dropUsersTable();
 

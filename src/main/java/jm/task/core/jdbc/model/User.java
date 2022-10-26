@@ -1,21 +1,27 @@
 package jm.task.core.jdbc.model;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
+//import org.hibernate.annotations.Entity;
+import javax.persistence.*;
 
-@Table
+@Entity
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames={"id", "name", "lastName", "age"})})
+
 public class User {
     @Id
+//    @SequenceGenerator(name = "id", sequenceName = "id", allocationSize = 0)
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id")
+//    @TableGenerator(name="TABLE_GEN",table="T_GENERATOR",pkColumnName="GEN_KEY",pkColumnValue="TEST",valueColumnName="GEN_VALUE",initialValue=1,allocationSize=1)
+//    @GeneratedValue(strategy=GenerationType.TABLE, generator="TABLE_GEN")
+    @Column (name = "id")
     private Long id;
 
-    @Column
+    @Column (name = "name")
     private String name;
 
-    @Column
+    @Column (name = "lastName")
     private String lastName;
 
-    @Column
+    @Column (name = "age")
     private Byte age;
 
     public User() {

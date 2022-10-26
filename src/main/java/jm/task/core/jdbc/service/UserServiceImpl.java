@@ -7,27 +7,39 @@ import java.util.List;
 
 public class UserServiceImpl implements UserService {
     private final UserDaoJDBCImpl uDAO = new UserDaoJDBCImpl();
+    private static final UserDaoHibernateImpl uDAOH = new UserDaoHibernateImpl();
+    public static boolean hibernateActive = true;
     public void createUsersTable() {
-        uDAO.createUsersTable();
+        if (hibernateActive) {
+            uDAOH.createUsersTable();
+        } else { uDAO.createUsersTable();}
     }
 
     public void dropUsersTable() {
-        uDAO.dropUsersTable();
+        if (hibernateActive) {
+            uDAOH.dropUsersTable();
+        } else { uDAO.dropUsersTable();}
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        uDAO.saveUser(name, lastName, age);
+        if (hibernateActive) {
+            uDAOH.saveUser(name, lastName, age);
+        } else { uDAO.saveUser(name, lastName, age);}
     }
 
     public void removeUserById(long id) {
-        uDAO.removeUserById(id);
+        if (hibernateActive) {
+            uDAOH.removeUserById(id);
+        } else { uDAO.removeUserById(id);}
     }
 
     public List<User> getAllUsers() {
-        return uDAO.getAllUsers();
+        return hibernateActive ? uDAOH.getAllUsers() : uDAO.getAllUsers();
     }
 
     public void cleanUsersTable() {
-        uDAO.cleanUsersTable();
+            if (hibernateActive) {
+                uDAOH.cleanUsersTable();
+            } else { uDAO.cleanUsersTable();}
     }
 }

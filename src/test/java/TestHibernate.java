@@ -47,7 +47,6 @@ public class TestHibernate {
         user.setLastName("tester");
         user.setAge((byte) 2);
         user.setId((long)1);
-        //session.createEntityGraph(User.class);
         session.save(user);
         session.getTransaction().commit();
 

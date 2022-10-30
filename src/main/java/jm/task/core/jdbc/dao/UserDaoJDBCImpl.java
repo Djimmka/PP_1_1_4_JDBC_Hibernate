@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
+
     private final Util utilSet = new Util();
     private String INSERT = "insert into users (name, surname, age)\n" +
             "values (?,?,?);";

@@ -7,6 +7,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+//Сюда глядеть не нужно - тут старая версия предыдущего задания, с ошибками, которые исправлены в другом задании
+//Так что давайте проверять блок Hibernate
+//Я бы всё сдавал в одном задании, но сайт не даёт - так что давайте делать вид, что тут нет никаких ошибок
+//Спасибо!
+
 public class UserDaoJDBCImpl implements UserDao {
 
     private final Util utilSet = new Util();

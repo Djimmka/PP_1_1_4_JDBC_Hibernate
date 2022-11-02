@@ -26,19 +26,19 @@ public class TestHibernate {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         try {
-            session.createSQLQuery("drop table users;").executeUpdate();
+            session.createSQLQuery("drop table if exists users;").executeUpdate();
         }catch (RuntimeException e) {
             System.out.println("already dropped");
         }
         session.getTransaction().commit();
 
         session.beginTransaction();
-        session.createSQLQuery("CREATE TABLE `pp_1_1_3-4_jdbc_hibernate-master`.`users` (\n" +
-                "  `id` INT NOT NULL,\n" +
+        session.createSQLQuery("CREATE TABLE if not exists `pp_1_1_3-4_jdbc_hibernate-master`.`users` (\n" +
+                "  `id` INT NOT NULL AUTO_INCREMENT,\n" +
                 "  `name` VARCHAR(45) NULL,\n" +
                 "  `lastName` VARCHAR(45) NULL,\n" +
                 "  `age` INT NULL,\n" +
-                "  PRIMARY KEY (`id`));").executeUpdate();
+                "   PRIMARY KEY (`id`));").executeUpdate();
         session.getTransaction().commit();
 
         session.beginTransaction();
@@ -46,8 +46,7 @@ public class TestHibernate {
         user.setName("test");
         user.setLastName("tester");
         user.setAge((byte) 2);
-        user.setId((long)1);
-        session.save(user);
+        session.saveOrUpdate(user);
         session.getTransaction().commit();
 
         session.beginTransaction();

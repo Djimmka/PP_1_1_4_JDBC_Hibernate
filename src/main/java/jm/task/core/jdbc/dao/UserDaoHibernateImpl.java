@@ -13,7 +13,7 @@ import java.util.OptionalLong;
 
 public class UserDaoHibernateImpl implements UserDao {
     @OneToMany(fetch = FetchType.LAZY)
-    private static final SessionFactory sessionFactory = new  Util().getSessionFactory();
+    private static final SessionFactory sessionFactory = Util.getInstance().getSessionFactory();
     private Transaction tr = null;
     public UserDaoHibernateImpl() {
     }

@@ -12,13 +12,15 @@ import org.hibernate.cfg.Configuration;
 
 public class Util {
     // реализуйте настройку соеденения с БД
+    private static Util INSTANCE;
+
     private static final String URL = "jdbc:mysql://localhost:3306/pp_1_1_3-4_jdbc_hibernate-master";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "root";
 
     private static SessionFactory sessionFactory;
 
-    public Util(){
+    private Util(){
         Properties prop= new Properties();
         prop.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/pp_1_1_3-4_jdbc_hibernate-master");
         prop.setProperty("dialect", "org.hibernate.dialect.MySQL");
@@ -28,6 +30,14 @@ public class Util {
         prop.setProperty("hibernate.default_schema","users");
         sessionFactory = new Configuration().addProperties(prop).addAnnotatedClass(User.class).buildSessionFactory();
     }
+
+    public static Util getInstance(){
+        if (INSTANCE==null) {
+            INSTANCE = new Util();
+        }
+        return INSTANCE;
+    }
+
     public Connection getConnection() {
         Connection connection;
         try {

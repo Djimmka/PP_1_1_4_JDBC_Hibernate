@@ -1,20 +1,15 @@
 package jm.task.core.jdbc.dao;
-
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 import org.hibernate.*;
-
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import java.sql.SQLException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
-import java.util.OptionalLong;
-// Not 1.1.3 task
 
 public class UserDaoHibernateImpl implements UserDao {
-    @OneToMany(fetch = FetchType.LAZY)
     private static final SessionFactory sessionFactory = Util.getInstance().getSessionFactory();
     private Transaction tr = null;
+
     public UserDaoHibernateImpl() {
     }
 
@@ -24,13 +19,12 @@ public class UserDaoHibernateImpl implements UserDao {
         try (Session session = sessionFactory.openSession()) {
             tr = session.beginTransaction();
             session.createSQLQuery("CREATE TABLE if not exists `pp_1_1_3-4_jdbc_hibernate-master`.`users` (\n" +
-                    "  `id` INT NOT NULL,\n" +
+                    "  `id` INT NOT NULL AUTO_INCREMENT,\n" +
                     "  `name` VARCHAR(45) NULL,\n" +
                     "  `lastName` VARCHAR(45) NULL,\n" +
                     "  `age` INT NULL,\n" +
                     "  PRIMARY KEY (`id`));").executeUpdate();
             tr.commit();
-            session.close();
         } catch (TransactionException e) {
             System.out.println("Already created");
             tr.rollback();
@@ -44,7 +38,6 @@ public class UserDaoHibernateImpl implements UserDao {
             tr = session.beginTransaction();
             session.createSQLQuery("drop table if exists users;").executeUpdate();
             tr.commit();
-            session.close();
         } catch (TransactionException e) {
             System.out.println("Already deleted");
             tr.rollback();
@@ -55,24 +48,13 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void saveUser(String name, String lastName, byte age) {
         try (Session session = sessionFactory.openSession()) {
-            OptionalLong i = OptionalLong.of(1);
-            try {
-                List<User> users = getAllUsers();
-                i = users.stream().mapToLong(User::getId).max();
-            } catch (RuntimeException e) {}
-            long j = (i.isPresent()) ? (i.getAsLong()+1) : (long) 1;
             User user = new User(name, lastName, age);
-            user.setId(j);
             tr = session.beginTransaction();
-            try {
-                session.save(user);
-                tr.commit();
-            } catch (TransactionException e) {
-                tr.rollback();
-            }
-            session.close();
+            session.save(user);
+            tr.commit();
         } catch (TransactionException e) {
             System.out.println("Already exist");
+            tr.rollback();
             e.printStackTrace();
         }
     }
@@ -84,7 +66,6 @@ public class UserDaoHibernateImpl implements UserDao {
             User user = session.get(User.class, id);
             session.delete(user);
             tr.commit();
-            session.close();
         } catch (TransactionException e) {
             System.out.println("Already removed");
             tr.rollback();
@@ -97,10 +78,11 @@ public class UserDaoHibernateImpl implements UserDao {
         List<User> users = null;
         try (Session session = sessionFactory.openSession()) {
             tr = session.beginTransaction();
-            Criteria criteria = session.createCriteria(User.class);
-            users = criteria.list();
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<User> userCriteriaQuery = builder.createQuery(User.class);
+            userCriteriaQuery.from(User.class);
+            users = session.createQuery(userCriteriaQuery).getResultList();
             tr.commit();
-            session.close();
         } catch (TransactionException e) {
             System.out.println("No users");
             tr.rollback();
@@ -115,7 +97,6 @@ public class UserDaoHibernateImpl implements UserDao {
             tr = session.beginTransaction();
             session.createSQLQuery("truncate table users;").executeUpdate();
             tr.commit();
-            session.close();
         } catch (TransactionException e) {
             System.out.println("Already deleted");
             if (tr!=null) {
